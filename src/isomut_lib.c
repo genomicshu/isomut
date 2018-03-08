@@ -235,7 +235,7 @@ int get_mplp(struct mplp* my_mplp,char* line, ssize_t line_size){
         my_mplp->pos= (int) strtol(tmp_str,NULL,10);
         //ref nuq
         get_next_entry(line,line_size,&i,&tmp_str);
-        my_mplp->ref_nuq=tmp_str[0];
+        my_mplp->ref_nuq=(char) toupper(tmp_str[0]);
 
         //read samples
         int temp_sample=0;
@@ -666,6 +666,11 @@ int call_snv(struct mplp* saved_mutations, int* mut_ptr, struct mplp* my_mplp,
         return 0;
     }
 
+    //skip position if the reference base is N
+    if (my_mplp->ref_nuq == 'N'){
+      return 0;
+    }
+
     double sample_mut_freq,min_other_ref_freq;
     int sample_idx,other_idx;
     char mut_base = 'E';
@@ -787,6 +792,10 @@ int call_indel(struct mplp* saved_mutations, int* mut_ptr, struct mplp* my_mplp,
         return 0;
     }
 
+    //skip position if the reference base is N
+    if (my_mplp->ref_nuq == 'N'){
+      return 0;
+    }
 
     double sample_indel_freq,min_other_noindel_freq;
     int sample_idx,other_idx;
